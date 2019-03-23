@@ -19,4 +19,7 @@ cards = card_list.find_all(class_ = 'asset cnbcnewsstory imgasset desc_size160_1
 headline_containers = cards.find_all(class_ = 'headline')
 headline_links = headline_containers.find_all('a')
 
+for link in headline_links:
+    print(link.prettify())
+
 
