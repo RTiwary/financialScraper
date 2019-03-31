@@ -1,25 +1,37 @@
-# Import Libraries
 import requests
+import time
 from bs4 import BeautifulSoup
+#Quantitative Investment Society
 
-# Store first page of CNBC breaking news
-page = requests.get('https://www.cnbc.com/breaking-news/?page=1')
-soup = BeautifulSoup(page.text, 'html.parser')
-
-# Go down DOM to find headlines
-cnbc_contents = soup.find(class_ = 'cnbc-contents')
-cnbc_body = cnbc_contents.find(class_ = 'cnbc-body')
-cols = cnbc_body.find(class_ = 'cols2')
-col1 = cols.find(class_ = 'unit col1')
-stories_linup = col1.find(class_ = 'stories-lineup bigHeader')
-stories_assetlist = stories_linup.find(class_ = 'stories_assetlist')
-
-card_list = stories_assetlist.find_all('li')
-cards = card_list.find_all(class_ = 'asset cnbcnewsstory imgasset desc_size160_105 card')
-headline_containers = cards.find_all(class_ = 'headline')
-headline_links = headline_containers.find_all('a')
-
-for link in headline_links:
-    print(link.prettify())
+#Change "notToday" and if statement "if 'Today'..." to make it more than 1 day
 
 
+fileName = input("File name to write to: ")
+file = open(fileName, 'a')
+notToday = False
+count = 1
+while notToday == False: #change if more days
+    url = "https://www.cnbc.com/breaking-news/"
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.76 Safari/537.36'}
+    response = requests.get(url, headers = headers)
+    
+    try:
+        soup = BeautifulSoup(response.content, "html.parser")
+        newslst = soup.find(id="cnbc-contents")
+        x = newslst.find(class_ = "stories_assetlist")
+        itemlst = x.find_all(class_="headline" )#newslst.find_all(class_="item")
+        
+        for i in itemlst:
+            
+            
+            print(i.find('a').get_text().split("\n")[1])
+            file.write(i.get_text().split('\n')[1])
+            file.write("\n")
+            
+        count += 1
+    except:
+        print("Fucked up")
+        print(response)
+        break
+    break
+file.close()
