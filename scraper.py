@@ -8,6 +8,12 @@ from bs4 import BeautifulSoup
 
 fileName = input("File name to write to: ")
 file = open(fileName, 'a')
+
+pages = []
+for i in range(1, 29):
+    url = 'https://www.cnbc.com/breaking-news/?page=' + str(i)
+    pages.append(url)
+
 notToday = False
 count = 1
 while notToday == False: #change if more days
@@ -22,10 +28,10 @@ while notToday == False: #change if more days
         itemlst = x.find_all(class_="headline" )#newslst.find_all(class_="item")
         
         for i in itemlst:
-            
-            
-            print(i.find('a').get_text().split("\n")[1])
-            file.write(i.get_text().split('\n')[1])
+            headline = i.find('a').get_text().split("\n")[1]
+            headline = "".join(line.strip() for line in headline.split("\n"))
+            print(headline)
+            file.write(headline)
             file.write("\n")
             
         count += 1
